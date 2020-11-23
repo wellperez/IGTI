@@ -28,21 +28,16 @@ String.prototype.extenso = function(c){
 window.addEventListener("load", start);
 
 function start() {
-  var form = document.querySelector("form");
-  form.addEventListener("submit", handleSubmit);
-}
-
-function handleSubmit(event) {
-  // Evitando o refresh
-  event.preventDefault();
-
   var input = document.querySelector("#num");
-	var text = input.value;
-	if (text >= 0 && text <= 999) {
-		alert(text.extenso())
-		text = ''
-		input.focus()
-	} else {
-		alert('Número Inválido!')
-	}
+	var output = document.querySelector("#num-of-range");
+	var outputInWriting = document.querySelector("#num-in-writing");
+
+	output.value = 500;
+	outputInWriting.value = input.value.extenso()
+	
+
+	input.oninput = function() {
+		output.value = this.value;
+		outputInWriting.value = input.value.extenso();
+	}	
 }
