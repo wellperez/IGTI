@@ -38,8 +38,11 @@ function handleSubmit(event) {
 
   var input = document.querySelector("#num");
 	var text = input.value;
-	
-	alert(text.extenso())
-	text = ''
-	input.focus();	
+	if (text >= 0 && text <= 999) {
+		alert(text.extenso())
+		text = ''
+		input.focus()
+	} else {
+		alert('Número Inválido!')
+	}
 }
