@@ -7,3 +7,7 @@ p {
   font-weight: bold;
   line-height: 20px;
 }
+
+img {
+  width: 70px;
+}

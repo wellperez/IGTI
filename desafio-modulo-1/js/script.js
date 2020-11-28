@@ -1,6 +1,3 @@
-//+ Carlos R. L. Rodrigues
-//@ http://jsfromhell.com/string/extenso [rev. #3]
-
 async function loadUsers() {
   const response = await fetch("http://localhost:3000/results");
   const json = await response.json();
@@ -13,39 +10,124 @@ async function handleSubmit(event) {
   event.preventDefault();
 
   var userInput = document.querySelector("#user");
-  var userInputValue = userInput.value;
+  var userInputValue = userInput.value.toLowerCase();
 
   const users = await loadUsers();
 
-  const results = document.getElementById("results");
+  const results = document.getElementById("results-ul");
+  results.textContent = "";
 
-  console.log(results);
+  const statistics = document.getElementById("statistics");
+  statistics.textContent = "";
+
+  let ageStatistics = 0;
+  let genderStatistics = { male: 0, female: 0, others: 0 };
+  let qntUserStatistics = 0;
 
   users.map((user, index) => {
     const firstName = user.name.first;
     const lastName = user.name.last;
     const age = user.dob.age;
     const picture = user.picture.large;
+    const gender = user.gender;
+
     if (
-      firstName.includes(userInputValue) ||
-      lastName.includes(userInputValue)
+      firstName.toLowerCase().includes(userInputValue) ||
+      lastName.toLowerCase().includes(userInputValue)
     ) {
-			results.appendChild(createImg(picture))
-      results.appendChild(createParagraph(firstName, lastName, age));
+      // ESTRUTURA PARA ADICIONAR OS USUÁRIOS NO HTML
+      const li = createLi();
+
+      li.appendChild(createImg(picture));
+      li.appendChild(createParagraph(firstName, lastName, age));
+
+      results.appendChild(li);
+
+      // ESTRUTURA PARA REALIZAR AS ESTATÍSTICAS
+      ageStatistics += age;
+      qntUserStatistics++;
+
+      if (gender === "female") {
+        genderStatistics.female++;
+      } else if (gender === "male") {
+        genderStatistics.male++;
+      } else {
+        genderStatistics.others++;
+      }
     }
+    console.log(qntUserStatistics);
   });
+
+  if (qntUserStatistics > 0) {
+    const h3 = document.getElementById("users-title");
+    h3.textContent = `${qntUserStatistics} usuário(s) encontrado(s)`;
+    document.getElementById("results-ul").removeAttribute("hidden");
+
+    createStatisticsParagraph(
+      genderStatistics.male,
+      genderStatistics.female,
+      genderStatistics.others,
+      ageStatistics,
+      qntUserStatistics
+    );
+  } else {
+    alert("Nenhum usuário encontrado!");
+    location.reload();
+  }
+}
+
+function createLi() {
+  const li = document.createElement("li");
+  li.classList.add("collection-item");
+  li.classList.add("avatar");
+  return li;
+}
+
+function createStatisticsParagraph(
+  maleGenderParam,
+  femaleGenderParam,
+  othersGendersParam,
+  sumOfAgesParam,
+  qntUserStatisticsParam
+) {
+  const maleGender = document.createElement("P");
+  maleGender.textContent = `Sexo masculino: ${maleGenderParam}`;
+
+  const femaleGender = document.createElement("P");
+  femaleGender.textContent = `Sexo masculino: ${femaleGenderParam}`;
+
+  const othersGenders = document.createElement("P");
+  othersGenders.textContent = `Outros Gêneros: ${othersGendersParam}`;
+
+  const sumOfAges = document.createElement("P");
+  sumOfAges.textContent = `Soma das Idades: ${sumOfAgesParam}`;
+
+  const averageAge = document.createElement("P");
+  averageAge.textContent = `Média das Idades: ${Math.round(
+    sumOfAgesParam / qntUserStatisticsParam,
+    -2
+  )}`;
+
+  statistics.append(
+    maleGender,
+    femaleGender,
+    othersGenders,
+    sumOfAges,
+    averageAge
+  );
 }
 
 function createParagraph(firstName, lastName, age) {
-	const para = document.createElement("P"); // Create a <p> node
-	para.textContent = `${firstName} ${lastName}, ${age} anos.`
-	return para
+  const para = document.createElement("P"); // Create a <p> node
+  para.textContent = `${firstName} ${lastName}, ${age} anos.`;
+  return para;
 }
 
 function createImg(src) {
-	const img = document.createElement('img'); 
-  img.src = src 
-	return img
+  const img = document.createElement("img");
+  img.src = src;
+  img.classList.add("circle");
+  return img;
 }
 
 function disableBtn() {
@@ -64,6 +146,8 @@ function start() {
   form.addEventListener("submit", handleSubmit);
 
   disableBtn();
+
+  document.getElementById("user").focus();
 }
 
 start();
