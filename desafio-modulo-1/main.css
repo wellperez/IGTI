@@ -1,4 +1,9 @@
-h1#title {
+h1#title,
+h3 {
   text-align: center;
 }
 
+p {
+  font-weight: bold;
+  line-height: 20px;
+}

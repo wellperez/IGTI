@@ -11,6 +11,7 @@
     />
     <link href="./main.css" rel="stylesheet" />
     <script defer type="text/javascript" src="./js/script.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
   </head>
 
   <body>
@@ -18,22 +19,30 @@
       <h1 id="title">Pesquisa de usuários:</h1>
       <div class="row">
         <form class="col s12">
-          <fieldset>
-            <div class="input-field col s11">
-              <input type="text" id="user" class="input-field" />
-              <label for="user">Busca</label>
-            </div>
-            <div class="input-field col s1">
-              <button
-                class="btn waves-effect waves-light"
-                type="submit"
-                name="action"
-              >
-                Enviar
-              </button>
-            </div>
-          </fieldset>
+          <div class="input-field col s11">
+            <input id="user" type="text" class="validate" />
+            <label for="user">Busca</label>
+          </div>
+          <div class="input-field col s1">
+            <button
+              class="btn waves-effect waves-light"
+              type="submit"
+              name="action"
+              id="send"
+              disabled
+            >
+              Enviar
+            </button>
+          </div>
         </form>
+      </div>
+      <div class="row">
+        <div class="col s6 results-container" id="results">
+          <h3>Nenhum Usuário Filtrado</h3>
+        </div>
+        <div class="col s6 results-container" id="statistics">
+          <h3>Estatísticas</h3>
+        </div>
       </div>
     </div>
   </body>
