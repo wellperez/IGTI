@@ -91,7 +91,7 @@ async function handleSubmit(event) {
   const genderStatistics = { male: 0, female: 0, others: 0 };
   let qntUserStatistics = 0;
 
-  users.map((user) => {
+  users.forEach((user) => {
     const firstName = user.name.first;
     const lastName = user.name.last;
     const { age } = user.dob;
@@ -122,8 +122,6 @@ async function handleSubmit(event) {
         genderStatistics.others += 1;
       }
     }
-
-    return true;
   });
 
   if (qntUserStatistics > 0) {
