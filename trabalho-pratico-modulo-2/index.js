@@ -23,9 +23,10 @@ async function lengthOfState(uf) {
 
 async function largestCities(states) {
   const citiesInState = await Promise.all(
-    states.map(
-      (state) => lengthOfState(state.Sigla).then((cities) => ({ state: state.Sigla, cities })),
-    ),
+    states.map((state) => lengthOfState(state.Sigla).then((cities) => ({
+      state: state.Sigla,
+      cities,
+    }))),
   );
 
   citiesInState.sort((a, b) => b.cities - a.cities);
@@ -34,13 +35,56 @@ async function largestCities(states) {
 
 async function smallestCities(states) {
   const citiesInState = await Promise.all(
-    states.map(
-      (state) => lengthOfState(state.Sigla).then((cities) => ({ state: state.Sigla, cities })),
-    ),
+    states.map((state) => lengthOfState(state.Sigla).then((cities) => ({
+      state: state.Sigla,
+      cities,
+    }))),
   );
 
   citiesInState.sort((a, b) => a.cities - b.cities);
   return citiesInState.filter((_, index) => index < 5).reverse();
+}
+
+async function biggestCityInState(states, cities) {
+  const citiesInState = states.map(
+    (state) => (cities.filter(
+      (city) => city.Estado === state.ID,
+    )
+    ).reduce((p, c) => (p.Nome.length >= c.Nome.length ? p : c)),
+  );
+  citiesInState.map((city) => (console.log({
+    city: city.Nome,
+    uf: states.filter((state) => state.ID === city.Estado)[0].Sigla,
+  })));
+}
+
+async function smallestCityInState(states, cities) {
+  const citiesInState = states.map(
+    (state) => (cities.filter(
+      (city) => city.Estado === state.ID,
+    )
+    ).reduce((p, c) => (p.Nome.length <= c.Nome.length ? p : c)),
+  );
+  citiesInState.map((city) => (console.log({
+    city: city.Nome,
+    uf: states.filter((state) => state.ID === city.Estado)[0].Sigla,
+  })));
+}
+
+async function biggestCityInAllStates(states, cities) {
+  const citiesInState = cities.reduce((p, c) => (p.Nome.length >= c.Nome.length ? p : c));
+
+  citiesInState.Estado = states.filter((state) => state.ID === citiesInState.Estado)[0].Sigla;
+
+  console.log(citiesInState);
+}
+
+async function smallestCityInAllStates(states, cities) {
+  const citiesInState = cities.reduce((p, c) => (p.Nome.length < c.Nome.length ? p : c));
+
+  citiesInState.Estado = states.filter((state) => state.ID === citiesInState.Estado)[0].Sigla;
+
+  console.log(citiesInState);
 }
 
 async function init() {
@@ -50,6 +94,10 @@ async function init() {
   await createStateFiles(states, cities);
   console.log(await largestCities(states));
   console.log(await smallestCities(states));
+  await biggestCityInState(states, cities.sort((a, b) => a.cities - b.cities));
+  await smallestCityInState(states, cities.sort((a, b) => b.cities - a.cities));
+  // await biggestCityInAllStates(states, cities.sort((a, b) => a.cities - b.cities));
+  await smallestCityInAllStates(states, cities);
 }
 
 init();
