@@ -22,44 +22,24 @@ async function lengthOfState(uf) {
 }
 
 async function largestCities(states) {
-  const citiesInState = [];
-  for (const state of states) {
-    // eslint-disable-next-line no-await-in-loop
-    const length = await lengthOfState(state.Sigla);
-    const stateObject = {
-      state: state.Sigla,
-      cities: length,
-    };
-    citiesInState.push(stateObject);
-    console.log((`${state.Sigla} - ${length}`));
-  }
+  const citiesInState = await Promise.all(
+    states.map(
+      (state) => lengthOfState(state.Sigla).then((cities) => ({ state: state.Sigla, cities })),
+    ),
+  );
 
-  citiesInState.sort((a, b) => {
-    if (a.cities < b.cities) return 1;
-    if (a.cities > b.cities) return -1;
-    return 0;
-  });
+  citiesInState.sort((a, b) => b.cities - a.cities);
   return citiesInState.filter((_, index) => index < 5);
 }
 
 async function smallestCities(states) {
-  const citiesInState = [];
-  for (const state of states) {
-    // eslint-disable-next-line no-await-in-loop
-    const length = await lengthOfState(state.Sigla);
-    const stateObject = {
-      state: state.Sigla,
-      cities: length,
-    };
-    citiesInState.push(stateObject);
-    console.log((`${state.Sigla} - ${length}`));
-  }
+  const citiesInState = await Promise.all(
+    states.map(
+      (state) => lengthOfState(state.Sigla).then((cities) => ({ state: state.Sigla, cities })),
+    ),
+  );
 
-  citiesInState.sort((a, b) => {
-    if (a.cities > b.cities) return 1;
-    if (a.cities < b.cities) return -1;
-    return 0;
-  });
+  citiesInState.sort((a, b) => a.cities - b.cities);
   return citiesInState.filter((_, index) => index < 5).reverse();
 }
 
