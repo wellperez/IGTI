@@ -98,4 +98,24 @@ router.put('/', async (req, res) => {
     });
   }
 });
+
+router.patch('/updateBalance', async (req, res) => {
+  try {
+    const account = req.body;
+    const data = JSON.parse(await readFile(global.filename));
+    const index = data.accounts.findIndex((acc) => acc.id === Number(account.id));
+
+    data.accounts[index].balance = account.balance;
+
+    await writeFile(global.filename, JSON.stringify(data, null, 2));
+
+    res.send(data.accounts[index]);
+  } catch (error) {
+    console.error(error);
+    res.status(400).send({
+      error: error.message,
+    });
+  }
+});
+
 export default router;
