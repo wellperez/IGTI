@@ -20,6 +20,8 @@ router.post('/', async (req, res, next) => {
     await writeFile(global.filename, JSON.stringify(data, null, 2));
 
     res.send(newAccount);
+
+    global.logger.info(`POST /account - ${JSON.stringify(newAccount)}`);
   } catch (error) {
     next(error);
   }
@@ -30,6 +32,7 @@ router.get('/', async (req, res, next) => {
     const data = JSON.parse(await readFile(global.filename));
     delete data.nextId;
     res.send(data);
+    global.logger.info('GET /account');
   } catch (error) {
     next(error);
   }
@@ -43,6 +46,7 @@ router.get('/:id', async (req, res, next) => {
 
     if (account) {
       res.send(account);
+      global.logger.info(`POST /account/${id} - ${JSON.stringify(account)}`);
     } else {
       res.status(404).json({
         status: 'Account Not Found',
@@ -62,6 +66,7 @@ router.delete('/:id', async (req, res, next) => {
     await writeFile(global.filename, JSON.stringify(data, null, 2));
 
     res.end();
+    global.logger.info(`DELETE /account/${id}`);
   } catch (error) {
     next(error);
   }
@@ -78,6 +83,7 @@ router.put('/', async (req, res, next) => {
     await writeFile(global.filename, JSON.stringify(data, null, 2));
 
     res.send(account);
+    global.logger.info(`PUT /account - ${JSON.stringify(account)}`);
   } catch (error) {
     next(error);
   }
@@ -94,13 +100,14 @@ router.patch('/updateBalance', async (req, res, next) => {
     await writeFile(global.filename, JSON.stringify(data, null, 2));
 
     res.send(data.accounts[index]);
+    global.logger.info(`PATCH /account/updateBalance - ${JSON.stringify(data.accounts[index])}`);
   } catch (error) {
     next(error);
   }
 });
 
 router.use((err, req, res, _) => {
-  console.error(err);
+  global.logger.error(`${req.method} ${req.baseUrl} - ${err.message}`);
   res.status(400).send({
     error: err.message,
   });

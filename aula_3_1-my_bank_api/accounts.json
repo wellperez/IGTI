@@ -1,0 +1,50 @@
+{
+  "nextId": 11,
+  "accounts": [
+    {
+      "id": 1,
+      "name": "Wellington",
+      "balance": 200
+    },
+    {
+      "id": 2,
+      "name": "Wellington",
+      "balance": 200
+    },
+    {
+      "id": 4,
+      "name": "Wellington",
+      "balance": 155222000
+    },
+    {
+      "id": 5,
+      "name": "Wellington",
+      "balance": 200
+    },
+    {
+      "id": 6,
+      "name": "Wellington",
+      "balance": 200
+    },
+    {
+      "id": 7,
+      "name": "Wellington",
+      "balance": 200
+    },
+    {
+      "id": 8,
+      "name": "Wellington",
+      "balance": 200
+    },
+    {
+      "id": 9,
+      "name": "Wellington",
+      "balance": 200
+    },
+    {
+      "id": 10,
+      "name": "Wellington",
+      "balance": 200
+    }
+  ]
+}
