@@ -17,7 +17,7 @@ router.post('/', async (req, res) => {
 
     data.accounts.push(newAccount);
 
-    await writeFile('accounts.json', JSON.stringify(data));
+    await writeFile('accounts.json', JSON.stringify(data, null, 2));
 
     res.send(newAccount);
   } catch (error) {
