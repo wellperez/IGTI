@@ -8,7 +8,7 @@ const router = express.Router();
 router.post('/', async (req, res) => {
   try {
     const account = req.body;
-    const data = JSON.parse(await readFile('accounts.json'));
+    const data = JSON.parse(await readFile(global.filename));
 
     const newAccount = {
       id: data.nextId++,
@@ -17,7 +17,7 @@ router.post('/', async (req, res) => {
 
     data.accounts.push(newAccount);
 
-    await writeFile('accounts.json', JSON.stringify(data, null, 2));
+    await writeFile(global.filename, JSON.stringify(data, null, 2));
 
     res.send(newAccount);
   } catch (error) {
@@ -27,6 +27,40 @@ router.post('/', async (req, res) => {
     });
   }
   res.end();
+});
+
+router.get('/', async (req, res) => {
+  try {
+    const data = JSON.parse(await readFile(global.filename));
+    delete data.nextId;
+    res.send(data);
+  } catch (error) {
+    console.error(error);
+    res.status(400).send({
+      error: error.message,
+    });
+  }
+});
+
+router.get('/:id', async (req, res) => {
+  try {
+    const data = JSON.parse(await readFile(global.filename));
+    const { id } = req.params;
+    const account = data.accounts.find((acc) => acc.id === Number(id));
+
+    if (account) {
+      res.send(account);
+    } else {
+      res.status(404).json({
+        status: 'Account Not Found',
+      });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(400).send({
+      error: error.message,
+    });
+  }
 });
 
 export default router;
