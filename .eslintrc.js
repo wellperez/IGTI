@@ -12,5 +12,7 @@ module.exports = {
   },
   rules: {
     semi: ['error', 'always', { omitLastInOneLineBlock: true }],
+    'no-console': 'off',
+    'no-plusplus': 'off',
   },
 };

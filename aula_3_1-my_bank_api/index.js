@@ -2,7 +2,7 @@
 /* eslint-disable import/extensions */
 import express from 'express';
 import { promises as fs } from 'fs';
-import accountsRouter from './routes/account.js';
+import accountsRouter from './routes/accounts.js';
 
 const { readFile, writeFile } = fs;
 
