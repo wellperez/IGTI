@@ -69,4 +69,38 @@ router.put('/', async (req, res, next) => {
   }
 });
 
+router.delete('/:id', async (req, res, next) => {
+  try {
+    const data = JSON.parse(await readFile(global.filename));
+    const { id } = req.params;
+    data.grades = data.grades.filter((grade) => grade.id !== Number(id));
+
+    await writeFile(global.filename, JSON.stringify(data, null, 2));
+
+    res.end();
+    global.logger.info(`DELETE /grades/${id}`);
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.get('/:id', async (req, res, next) => {
+  try {
+    const data = JSON.parse(await readFile(global.filename));
+    const { id } = req.params;
+    const grade = data.grades.find((result) => result.id === Number(id));
+
+    if (grade) {
+      res.send(grade);
+      global.logger.info(`POST /grades/${id} - ${JSON.stringify(grade)}`);
+    } else {
+      res.status(404).json({
+        status: 'Grade Not Found',
+      });
+    }
+  } catch (error) {
+    next(error);
+  }
+});
+
 export default router;
