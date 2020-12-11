@@ -8,11 +8,16 @@ const router = express.Router();
 router.post('/', async (req, res, next) => {
   try {
     const account = req.body;
+
+    if (account.balance == null || !account.name) {
+      throw new Error('Name e Balance são obrigatórios');
+    }
     const data = JSON.parse(await readFile(global.filename));
 
     const newAccount = {
       id: data.nextId++,
-      ...account,
+      name: account.name,
+      balance: account.balance,
     };
 
     data.accounts.push(newAccount);
@@ -75,14 +80,24 @@ router.delete('/:id', async (req, res, next) => {
 router.put('/', async (req, res, next) => {
   try {
     const account = req.body;
+
+    if (account.balance == null || !account.name) {
+      throw new Error('Name e Balance são obrigatórios');
+    }
+
     const data = JSON.parse(await readFile(global.filename));
     const index = data.accounts.findIndex((acc) => acc.id === Number(account.id));
 
-    data.accounts[index] = account;
+    if (index === -1) {
+      throw new Error('Registro Nao encontrado!');
+    }
+
+    data.accounts[index].name = account.name;
+    data.accounts[index].balance = account.balance;
 
     await writeFile(global.filename, JSON.stringify(data, null, 2));
 
-    res.send(account);
+    res.send(data.accounts[index]);
     global.logger.info(`PUT /account - ${JSON.stringify(account)}`);
   } catch (error) {
     next(error);
@@ -92,8 +107,16 @@ router.put('/', async (req, res, next) => {
 router.patch('/updateBalance', async (req, res, next) => {
   try {
     const account = req.body;
+
+    if (account.balance == null || !account.id) {
+      throw new Error('ID e Balance são obrigatórios');
+    }
     const data = JSON.parse(await readFile(global.filename));
     const index = data.accounts.findIndex((acc) => acc.id === Number(account.id));
+
+    if (index === -1) {
+      throw new Error('Registro Nao encontrado!');
+    }
 
     data.accounts[index].balance = account.balance;
 
