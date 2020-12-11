@@ -1,5 +1,5 @@
 {
-  "nextId": 50,
+  "nextId": 49,
   "grades": [
     {
       "id": 1,
@@ -384,14 +384,6 @@
       "type": "Desafio",
       "value": 45,
       "timestamp": "2020-05-19T18:21:25.284Z"
-    },
-    {
-      "id": 49,
-      "student": "Wellington",
-      "subject": "Teste",
-      "type": "Teste",
-      "value": 50,
-      "timestamp": "2020-12-11T13:43:17.088Z"
     }
   ]
 }
