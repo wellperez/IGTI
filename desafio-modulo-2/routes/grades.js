@@ -138,7 +138,35 @@ router.get('/subjectType', async (req, res, next) => {
       );
     } else {
       res.status(404).json({
-        status: 'Student or Subject not found',
+        status: 'Type or Subject not found',
+      });
+    }
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.get('/bestSubjectType', async (req, res, next) => {
+  try {
+    const data = JSON.parse(await readFile(global.filename));
+    const { type, subject } = req.query;
+
+    const result = data.grades
+      .filter(
+        (grade) => grade.type === type && grade.subject === subject,
+      )
+      .sort((a, b) => b.value - a.value);
+
+    if (result) {
+      res.send(result);
+      global.logger.info(
+        `GET/grades/bestSubjectType?type=${type}&subject=${subject} | ${JSON.stringify(
+          result,
+        )}`,
+      );
+    } else {
+      res.status(404).json({
+        status: 'Type or Subject not found',
       });
     }
   } catch (error) {
