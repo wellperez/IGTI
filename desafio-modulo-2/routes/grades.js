@@ -84,6 +84,37 @@ router.delete('/:id', async (req, res, next) => {
   }
 });
 
+router.get('/studentSubject', async (req, res, next) => {
+  try {
+    const data = JSON.parse(await readFile(global.filename));
+    const { student, subject } = req.query;
+    console.log('teste');
+    console.log(student);
+
+    let average = 0;
+
+    data.grades.forEach((result) => {
+      if (result.student === student && result.subject === subject) {
+        average += result.value;
+        console.log(result);
+      }
+    });
+
+    if (average) {
+      res.send(
+        { sum: average },
+      );
+      global.logger.info(`GET/grades/studentSubject?student=${student}&subject=${subject} | ${JSON.stringify({ sum: average })}`);
+    } else {
+      res.status(404).json({
+        status: 'Student or Subject not found',
+      });
+    }
+  } catch (error) {
+    next(error);
+  }
+});
+
 router.get('/:id', async (req, res, next) => {
   try {
     const data = JSON.parse(await readFile(global.filename));
