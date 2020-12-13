@@ -88,23 +88,54 @@ router.get('/studentSubject', async (req, res, next) => {
   try {
     const data = JSON.parse(await readFile(global.filename));
     const { student, subject } = req.query;
-    console.log('teste');
-    console.log(student);
 
-    let average = 0;
+    let sum = 0;
 
     data.grades.forEach((result) => {
       if (result.student === student && result.subject === subject) {
+        sum += result.value;
+      }
+    });
+
+    if (sum) {
+      res.send({ sum });
+      global.logger.info(
+        `GET/grades/studentSubject?student=${student}&subject=${subject} | ${JSON.stringify(
+          { sum },
+        )}`,
+      );
+    } else {
+      res.status(404).json({
+        status: 'Student or Subject not found',
+      });
+    }
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.get('/subjectType', async (req, res, next) => {
+  try {
+    const data = JSON.parse(await readFile(global.filename));
+    const { type, subject } = req.query;
+
+    let average = 0;
+    let count = 0;
+
+    data.grades.forEach((result) => {
+      if (result.type === type && result.subject === subject) {
         average += result.value;
-        console.log(result);
+        count++;
       }
     });
 
     if (average) {
-      res.send(
-        { sum: average },
+      res.send({ average: average / count });
+      global.logger.info(
+        `GET/grades/subjectType?type=${type}&subject=${subject} | ${JSON.stringify(
+          { average: average / count },
+        )}`,
       );
-      global.logger.info(`GET/grades/studentSubject?student=${student}&subject=${subject} | ${JSON.stringify({ sum: average })}`);
     } else {
       res.status(404).json({
         status: 'Student or Subject not found',
